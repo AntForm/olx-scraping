@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from grab import Grab
 import re
 from django.utils import timezone
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -47,5 +48,8 @@ class RequestView(SuccessMessageMixin, FormView):
                 dt_obj = timezone.datetime.strptime(dt, "%H:%M, %d %m %Y")
                 model.olxlinks_set.create(link=lnk, datetime=dt_obj)
             page_num -= 1
+
+        message = 'Popular time: /p_time/' + str(model.pk) + '\n' + 'Popular day: /p_day/' + str(model.pk)
+        send_mail('Report', message, 'nekidaemtestblog@gmail.com', [model.email], fail_silently=False,)
 
         return super().form_valid(form)
