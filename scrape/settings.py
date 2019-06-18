@@ -112,7 +112,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -127,3 +127,5 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'nekidaemtestblog@gmail.com'
 EMAIL_HOST_PASSWORD = 'django2019'
+
+CELERY_BROKER_URL = 'amqp://localhost'
