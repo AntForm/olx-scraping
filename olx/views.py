@@ -28,7 +28,7 @@ class RequestView(SuccessMessageMixin, FormView):
 
 class PopularTime(View):
     def get(self, request, pk):
-        description={"hour" : ("time", "Time"), "quantity" : ("number", "Quantity")}
+        description={"hour" : ("number", "Time"), "quantity" : ("number", "Quantity")}
         data = []
         context = {}
         obj = OlxRequest.objects.get(pk = pk)
@@ -46,4 +46,20 @@ class PopularTime(View):
         return render(request, 'olx/p_time.html', context)
 
 class PopularDay(View):
-    pass
+    def get(self, request, pk):
+        description={"weekday" : ("number", "Weekday"), "quantity" : ("number", "Quantity")}
+        data = []
+        context = {}
+        obj = OlxRequest.objects.get(pk = pk)
+
+        for x in range(1, 8):
+            dic={}
+            dic['weekday'] = x
+            dic['quantity'] = obj.olxlinks_set.filter(datetime__week_day=x).count()
+            data.append(dic)
+
+        data_table = gviz_api.DataTable(description)
+        data_table.LoadData(data)
+        context['gviz_data'] = data_table.ToJSon(columns_order=("weekday", "quantity"))
+
+        return render(request, 'olx/p_weekday.html', context)
